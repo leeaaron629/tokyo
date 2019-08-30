@@ -9,6 +9,11 @@ defmodule Tokyo.Application do
     children = [
       # Starts a worker by calling: Tokyo.Worker.start_link(arg)
       # {Tokyo.Worker, arg}
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: Tokyo.Router,
+        options: [port: 4001]
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
