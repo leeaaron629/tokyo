@@ -11,8 +11,8 @@ defmodule Tokyo.Application do
       # {Tokyo.Worker, arg}
       Plug.Cowboy.child_spec(
         scheme: :http,
-        plug: Tokyo.Router,
-        options: [port: 4001]
+        plug: Tokyo.Exercise,
+        options: [port: 3000]
       )
     ]
 
