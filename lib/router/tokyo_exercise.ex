@@ -1,5 +1,7 @@
 defmodule Tokyo.Exercise do
     
+    alias Tokyo.ExerciseService
+
     use Plug.Router
 
     plug :match
@@ -10,30 +12,22 @@ defmodule Tokyo.Exercise do
 
     get "/users/:user_id/exercises" do
 
-        IO.puts "Fetching exercises for #{user_id}"
-
         send_resp(conn, 200, "")
     end
 
     post "/users/:user_id/exercises" do
 
-        IO.puts "Saving an exercise for #{user_id}"
-
-        IO.puts "#{inspect conn.body_params}"
+        ExerciseService.create_exercise_record(conn.body_params, user_id)
 
         send_resp(conn, 201, "")
     end
 
     put "/users/:user_id/exercises/:exercise_id" do
 
-        IO.puts "Updating exercise #{exercise_id} for #{user_id}"
-
         send_resp(conn, 200, "")
     end
 
-    delete "/users/:user_id/exercises/:exercise_id" do
-
-        IO.puts "Deleting exercise #{exercise_id} for #{user_id}"
+    delete "/users/:user_id/exercises/:exercise_id" do\
 
         send_resp(conn, 204, "")
     end

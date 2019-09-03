@@ -13,7 +13,8 @@ defmodule Tokyo.Application do
         scheme: :http,
         plug: Tokyo.Exercise,
         options: [port: 3000]
-      )
+      ),
+      Tokyo.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
