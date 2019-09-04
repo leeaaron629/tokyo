@@ -8,8 +8,8 @@ defmodule Tokyo.ExerciseService do
         IO.puts "Saving an exercise for #{user_id}"
         IO.puts "#{inspect payload}"
 
-        payload_to_struct(%Tokyo.ExerciseRecord{}, payload)
-        |> IO.inspect
+        Tokyo.ExerciseRecord.changeset(%Tokyo.ExerciseRecord{}, payload)
+        |> Tokyo.Repo.insert
 
     end
 
