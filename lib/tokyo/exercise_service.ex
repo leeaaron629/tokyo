@@ -12,6 +12,9 @@ defmodule Tokyo.ExerciseService do
     end
     
     def create_exercise_record(payload, user_id) do
+
+        Map.put(payload, :user_id, user_id)
+
         IO.puts "Saving an exercise for #{user_id}"
         IO.puts "#{inspect payload}"
         
