@@ -23,7 +23,7 @@ defmodule Tokyo.ExerciseService do
         |> Tokyo.Repo.insert
         |> case do
             {:ok, exercise_record} -> exercise_record
-            {:error, changeset} -> IO.puts "Error has occured"
+            {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
         end
 
     end
@@ -38,7 +38,7 @@ defmodule Tokyo.ExerciseService do
         |> Tokyo.Repo.update
         |> case do
             {:ok, exercise_record} -> exercise_record
-            {:error, changeset} -> IO.puts "Error updating"
+            {:error, changeset} -> IO.puts "Error updating: #{inspect changeset}"
         end
 
     end
@@ -52,7 +52,7 @@ defmodule Tokyo.ExerciseService do
         |> Tokyo.Repo.delete
         |> case do
             {:ok, exercise_record} -> IO.puts "Deleted #{inspect exercise_record}"
-            {:error, changeset} -> IO.puts "Error occured during deletion"
+            {:error, changeset} -> IO.puts "Error occured during deletion: #{inspect changeset}"
         end
 
     end
