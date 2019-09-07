@@ -13,14 +13,15 @@ defmodule Tokyo.ExerciseService do
     
     def create_exercise_record(payload, user_id) do
 
-        Map.put(payload, :user_id, user_id)
-        Map.put(payload, :ex_rec_id, Ecto.UUID.generate)
+        prepared_payload = payload 
+        |> Map.put(:user_id, user_id)
+        |> Map.put(:ex_rec_id, Ecto.UUID.generate)
 
         IO.puts "Saving an exercise for #{user_id}"
-        IO.puts "#{inspect payload}"
+        IO.puts "#{inspect prepared_payload}"
         
         %Tokyo.ExerciseRecord{}
-        |> Tokyo.ExerciseRecord.changeset(payload)
+        |> Tokyo.ExerciseRecord.changeset(prepared_payload)
         |> Tokyo.Repo.insert
         |> case do
             {:ok, exercise_record} -> exercise_record
@@ -29,11 +30,11 @@ defmodule Tokyo.ExerciseService do
 
     end
 
-    def update_exercise_record_by_id(payload, id) do
-        IO.puts "Updating exercise #{payload} with id = #{id}"
+    def update_exercise_record(payload, id) do
+        IO.puts "Updating exercise #{inspect payload} with id = #{id}"
 
         Tokyo.ExerciseRecord
-        |> Ecto.Query.where(ex_id: ^id)
+        |> Ecto.Query.where(ex_rec_id: ^id)
         |> Tokyo.Repo.one
         |> Tokyo.ExerciseRecord.changeset(payload)
         |> Tokyo.Repo.update
@@ -44,12 +45,13 @@ defmodule Tokyo.ExerciseService do
 
     end
 
-    def delete_exercise_record_by_id(id) do
+    def delete_exercise_record(id) do
         IO.puts "Deleting exercise with id = #{id}"
 
         Tokyo.ExerciseRecord
-        |> Ecto.Query.where(ex_id: ^id)
+        |> Ecto.Query.where(ex_rec_id: ^id)
         |> Tokyo.Repo.one
+        |> IO.inspect
         |> Tokyo.Repo.delete
         |> case do
             {:ok, exercise_record} -> IO.puts "Deleted #{inspect exercise_record}"
