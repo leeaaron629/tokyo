@@ -8,10 +8,10 @@ defmodule Tokyo.ExerciseRecord do
     schema "exercise_records" do
         field :ex_rec_id, Ecto.UUID
         field :ex_id, Ecto.UUID
+        field :user_id, Ecto.UUID
         field :reps, :integer
         field :weights, :integer
         field :created_date, :naive_datetime
-        field :created_by, :string
     end
 
     def changeset(exercise_record, params \\ %{}) do
