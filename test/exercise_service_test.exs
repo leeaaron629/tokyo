@@ -13,7 +13,7 @@ defmodule TokyoTest.ExerciseService do
         weights: 135
     }
 
-    test "insert, then delete exercise record" do
+    test "create, then delete exercise record" do
 
         saved_record = @default_payload
         |> Map.put(:created_date, now())
@@ -32,7 +32,7 @@ defmodule TokyoTest.ExerciseService do
 
     end
 
-    test "update an exercise record" do
+    test "create, update, then delete an exercise record" do
 
         saved_record = @default_payload
         |> Map.put(:created_date, now())
@@ -48,8 +48,6 @@ defmodule TokyoTest.ExerciseService do
         |> Ecto.Query.where(ex_rec_id: ^id)
         |> Tokyo.Repo.one
 
-        IO.puts "Response after updating... #{inspect response}"
-
         assert response.reps == 10
         assert response.weights == 95
 
@@ -63,7 +61,7 @@ defmodule TokyoTest.ExerciseService do
         
     end
 
-    test "fetch all exercise records by user id" do
+    test "create exercise records, then fetch all by user id, and finally delete all" do
 
         user_to_fetch = "forFetchExerciseTest"
 
