@@ -10,30 +10,28 @@ defmodule Tokyo.Exercise do
                         json_decoder: Jason
     plug :dispatch
 
-    get "/users/:user_id/exercises" do
-
+    get "/users/:user_id/exercise-records" do
+        response = ExerciseService.fetch_exercise_records_by_user_id(user_id)
         send_resp(conn, 200, "")
     end
 
-    post "/users/:user_id/exercises" do
-
-        ExerciseService.create_exercise_record(conn.body_params, user_id)
-
-        send_resp(conn, 201, "")
+    post "/users/:user_id/exercise-records" do
+        response = ExerciseService.create_exercise_record(conn.body_params, user_id)
+        send_resp(conn, 201, response)
     end
 
-    put "/users/:user_id/exercises/:exercise_id" do
-
-        send_resp(conn, 200, "")
+    put "/users/:user_id/exercise-records/:ex_rec_id" do
+        response = ExerciseService.update_exercise_record(conn.body_params, ex_rec_id)
+        send_resp(conn, 200, response)
     end
 
-    delete "/users/:user_id/exercises/:exercise_id" do\
-
+    delete "/users/:user_id/exercise-records/:ex_rec_id" do
+        response = ExerciseService.update_exercise_record(conn.body_params, ex_rec_id)
         send_resp(conn, 204, "")
     end
 
     match _ do
-        send_resp(conn, 404, "Endpoint does not exists in Tokyo")
+        send_resp(conn, 404, "URI does not exists in Tokyo")
     end
 
 end
