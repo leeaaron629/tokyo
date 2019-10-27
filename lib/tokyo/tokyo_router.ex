@@ -1,4 +1,4 @@
-defmodule Tokyo.Exercise do
+defmodule Tokyo.Router do
     
     alias Tokyo.ExerciseService
 
