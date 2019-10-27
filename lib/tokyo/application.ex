@@ -9,11 +9,8 @@ defmodule Tokyo.Application do
     children = [
       # Starts a worker by calling: Tokyo.Worker.start_link(arg)
       # {Tokyo.Worker, arg}
-      Plug.Cowboy.child_spec(
-        scheme: :http,
-        plug: Tokyo.Exercise,
-        options: [port: 3000]
-      ),
+      # {Plug.Cowboy, scheme: :http, plug: Tokyo.User, options: [port: 3000]},
+      {Plug.Cowboy, scheme: :http, plug: Tokyo.Exercise,options: [port: 3000]},
       Tokyo.Repo
     ]
 
