@@ -10,6 +10,10 @@ defmodule Tokyo.Router do
                         json_decoder: Jason
     plug :dispatch
 
+    # User Endpoints
+
+    # Exercise Endpoints
+
     get "/users/:user_id/exercise-records" do
         response = ExerciseService.fetch_exercise_records_by_user_id(user_id)
         send_resp(conn, 200, "")

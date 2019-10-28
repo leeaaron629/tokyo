@@ -4,8 +4,8 @@ defmodule Tokyo.Service.ExerciseRecord do
         IO.puts "Fetching exercises for #{user_id}"
     end
 
-    def save_exercise_rec(exercise_rec) do
-        IO.puts "Saving exercise record #{inspect exercise_rec} with "
+    def save_exercise_rec(exercise_rec, user_id) do
+        IO.puts "Saving exercise record #{inspect exercise_rec} for #{inspect user_id}"
     end
 
     def delete_exercise_rec(id) do

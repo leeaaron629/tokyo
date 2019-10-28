@@ -8,3 +8,5 @@ config :tokyo, Tokyo.Repo,
   password: "abc123",
   hostname: "localhost"
 
+config :tokyo, initial_repo_state: %{}
+
