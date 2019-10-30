@@ -1,4 +1,4 @@
 defmodule Set do
-    defstruct   weight_in_grams: 0,
-                rep: 0
+    defstruct   weight: 0,
+                reps: 0
 end
