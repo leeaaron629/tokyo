@@ -30,9 +30,23 @@ defmodule Tokyo.Repo.ExerciseRecord do
         exercise_records = Map.get(current_state, user_id, %{})
         updated_exercise_records = Map.put(exercise_records, ex_rec["ex_rec_id"], ex_rec)
 
-        new_state = current_state
-        |> Map.put(user_id, updated_exercise_records)
+        new_state = Map.put(current_state, user_id, updated_exercise_records)
         {:noreply, new_state} 
+    end
+
+    # Remove Exercise Record from the user
+
+    def remove_exercise_records(ex_rec_id, user_id) do
+        GenServer.cast(@me {:remove_ex_rec, ex_rec_id, user_id})
+    end
+
+    def handle_cast({:remove_ex_rec, ex_rec_id, user_id}, current_state) do
+        
+        exercise_records = Map.get(current_state, user_id)
+        updated_exercise_records = Map.delete(exercise_records, ex_rec_id)
+
+        new_state = Map.put(current_state, user_id, updated_exercise_records)
+        {:noreply, new_state}
     end
 
 end
