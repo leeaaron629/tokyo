@@ -11,22 +11,60 @@ defmodule TokyoTest.Repo.ExerciseRecord do
         
         %{
             "ex_rec_id" => Ecto.UUID.generate,
-            "sets" => []
+            "exercise_id" => Ecto.UUID.generate,
+            "sets" => [%Set{weight: 10_000, reps: 5}]
         }
         |> Repo.ExerciseRecord.save_exercise_records("Aaron")
 
-        exercise_records = Repo.ExerciseRecord.get_exercise_records("Aaron")
-        IO.puts ("Aaron's Exercise Records:\n #{inspect exercise_records}")
-
         %{
             "ex_rec_id" => Ecto.UUID.generate,
-            "sets" => []
+            "exercise_id" => Ecto.UUID.generate,
+            "sets" => [%Set{weight: 10_500, reps: 5}]
+        }
+        |> Repo.ExerciseRecord.save_exercise_records("Benjamin")
+        
+        uuid_to_get = Ecto.UUID.generate
+        %{
+            "ex_rec_id" => uuid_to_get,
+            "exercise_id" => Ecto.UUID.generate,
+            "sets" => [%Set{weight: 20_000, reps: 10}]
         }
         |> Repo.ExerciseRecord.save_exercise_records("Benjamin")
 
+        # Make sure get exercise records does not change state
         exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
-        IO.puts ("Benjamin's Exercise Records:\n #{inspect exercise_records}")
+        exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
+
+        assert exercise_records != nil
+        assert Map.get(exercise_records, uuid_to_get) != nil
 
     end
+
+    test "create and delete a exercise record for user" do
+        
+        uuid_to_delete = Ecto.UUID.generate
+        %{
+            "ex_rec_id" => uuid_to_delete,
+            "exercise_id" => Ecto.UUID.generate,
+            "sets" => [%Set{weight: 10_500, reps: 5}]
+        }
+        |> Repo.ExerciseRecord.save_exercise_records("Benjamin")
+        
+        uuid_to_get = Ecto.UUID.generate
+        %{
+            "ex_rec_id" => uuid_to_get,
+            "exercise_id" => Ecto.UUID.generate,
+            "sets" => [%Set{weight: 20_000, reps: 10}]
+        }
+        |> Repo.ExerciseRecord.save_exercise_records("Benjamin")
+
+        Repo.ExerciseRecord.remove_exercise_records(uuid_to_delete, "Benjamin")
+        exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
+
+        assert Map.get(exercise_records, uuid_to_delete) == nil
+        assert Map.get(exercise_records, uuid_to_get) != nil
+
+    end
+
 
 end

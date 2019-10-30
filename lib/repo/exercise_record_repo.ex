@@ -15,8 +15,9 @@ defmodule Tokyo.Repo.ExerciseRecord do
     end
 
     def handle_call({:get_ex_rec, user_id}, _from, current_state) do
-        IO.puts "Current state: #{inspect current_state}"
-        {:reply, current_state, current_state[user_id]}
+        # IO.puts "Current state: #{inspect current_state}"
+        # IO.puts "Return value: #{inspect current_state[user_id]}"
+        {:reply, current_state[user_id], current_state}
     end
 
     # Save Exercise Records from the user
@@ -37,7 +38,7 @@ defmodule Tokyo.Repo.ExerciseRecord do
     # Remove Exercise Record from the user
 
     def remove_exercise_records(ex_rec_id, user_id) do
-        GenServer.cast(@me {:remove_ex_rec, ex_rec_id, user_id})
+        GenServer.cast(@me, {:remove_ex_rec, ex_rec_id, user_id})
     end
 
     def handle_cast({:remove_ex_rec, ex_rec_id, user_id}, current_state) do
