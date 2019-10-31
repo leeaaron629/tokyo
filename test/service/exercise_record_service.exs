@@ -6,11 +6,12 @@ defmodule TokyoTest.Service.ExerciseRecord do
     alias Tokyo.Service.ExerciseRecord
 
     @default_payload %{
-        "exercise_rec_id" => "EX_123",
+        "ex_rec_id" => "EX_REC_123",
+        "exercise_id" => "EX_123",
         "sets" => [
-            %{weight_in_grams: 10000, reps: 5},
-            %{weight_in_grams: 20000, reps: 3},
-            %{weight_in_grams: 30000, reps: 1}
+            %{weight: 10_000, reps: 5},
+            %{weight: 20_000, reps: 3},
+            %{weight: 30_000, reps: 1}
         ]
     }
 
