@@ -32,7 +32,7 @@ defmodule TokyoTest.Repo.ExerciseRecord do
         |> Repo.ExerciseRecord.save_exercise_records("Benjamin")
 
         # Make sure get exercise records does not change state
-        exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
+        _exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
         exercise_records = Repo.ExerciseRecord.get_exercise_records("Benjamin")
 
         assert exercise_records != nil
