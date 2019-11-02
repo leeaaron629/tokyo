@@ -16,7 +16,6 @@ defmodule Tokyo.Service.ExerciseRecord do
             nil -> Map.put(ex_rec, :ex_rec_id, Ecto.UUID.generate)
             _-> ex_rec
         end
-
         ExerciseRecord.save_exercise_records(ex_rec_to_save, user_id)
 
         ex_rec_to_save
