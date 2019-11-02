@@ -25,18 +25,23 @@ defmodule Tokyo.Router do
         response = conn.body_params 
         |> ExerciseRecord.to_struct
         |> ExerciseRecService.save_exercise_rec(user_id)
-        |> ExerciseRecord.to_mapa
+        |> ExerciseRecord.to_map
         |> Jason.encode!
         send_resp(conn, 201, response)
     end
 
     put "/users/:user_id/exercise-records/:ex_rec_id" do
-        send_resp(conn, 200, "Updating an exercise records")
+        response = conn.body_params
+        |> ExerciseRecord.to_struct
+        |> ExerciseRecService.save_exercise_rec(user_id)
+        |> ExerciseRecord.to_map
+        |> Jason.encode!
+        send_resp(conn, 200, response)
     end
 
     delete "/users/:user_id/exercise-records/:ex_rec_id" do
-
-        send_resp(conn, 204, "Deleting an exercise records")
+        ExerciseRecService.delete_exercise_rec(ex_rec_id, user_id)
+        send_resp(conn, 204, "")
     end
 
     match _ do
