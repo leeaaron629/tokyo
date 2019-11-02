@@ -18,8 +18,6 @@ Params:
 
 Creates an exercise record for the given user
 
-Body:
-
 ```json
 {
   "exerciseId": "bb142db7-b60a-466b-b12e-1fbd2bf83858",
