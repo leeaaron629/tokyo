@@ -48,7 +48,7 @@ defmodule Tokyo.Repo.ExerciseRecord do
     def handle_cast({:save_ex_rec, ex_rec, user_id}, current_state) do
         
         exercise_records = Map.get(current_state, user_id, %{})
-        updated_exercise_records = Map.put(exercise_records, ex_rec["ex_rec_id"], ex_rec)
+        updated_exercise_records = Map.put(exercise_records, ex_rec.ex_rec_id, ex_rec)
 
         new_state = Map.put(current_state, user_id, updated_exercise_records)
         {:noreply, new_state} 

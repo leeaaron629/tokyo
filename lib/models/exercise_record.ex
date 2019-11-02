@@ -8,9 +8,14 @@ defmodule ExerciseRecord do
     def to_struct(map) do
         %ExerciseRecord{
             ex_rec_id: Map.get(map, "ex_rec_id"),
+            exercise_id: Map.get(map, "exercise_id"),
             sets: Map.get(map, "sets"),
             created_date: Map.get(map, "created_date"),
             completed_date: Map.get(map, "completed_date")
         }
+    end
+
+    def to_map(struct = %ExerciseRecord{}) do
+        Map.delete(struct, :__struct__)
     end
 end
