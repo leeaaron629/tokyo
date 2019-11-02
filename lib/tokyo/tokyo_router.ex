@@ -1,6 +1,4 @@
 defmodule Tokyo.Router do
-    
-    alias Tokyo.ExerciseService
 
     use Plug.Router
 
@@ -10,28 +8,28 @@ defmodule Tokyo.Router do
                         json_decoder: Jason
     plug :dispatch
 
+    alias Tokyo.Service.ExerciseRecord
+
     # User Endpoints
 
     # Exercise Endpoints
 
     get "/users/:user_id/exercise-records" do
-        response = ExerciseService.fetch_exercise_records_by_user_id(user_id)
-        send_resp(conn, 200, "")
+        ExerciseRecord.fetch_exercise_records_by_user_id(user_id)
+        send_resp(conn, 200, "Fetching exercise records")
     end
 
     post "/users/:user_id/exercise-records" do
-        response = ExerciseService.create_exercise_record(conn.body_params, user_id)
-        send_resp(conn, 201, response)
+        send_resp(conn, 201, "Creating an exercise records")
     end
 
     put "/users/:user_id/exercise-records/:ex_rec_id" do
-        response = ExerciseService.update_exercise_record(conn.body_params, ex_rec_id)
-        send_resp(conn, 200, response)
+        send_resp(conn, 200, "Updating an exercise records")
     end
 
     delete "/users/:user_id/exercise-records/:ex_rec_id" do
-        response = ExerciseService.update_exercise_record(conn.body_params, ex_rec_id)
-        send_resp(conn, 204, "")
+
+        send_resp(conn, 204, "Deleting an exercise records")
     end
 
     match _ do

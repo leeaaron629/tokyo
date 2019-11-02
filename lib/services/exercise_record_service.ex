@@ -4,7 +4,7 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     def fetch_exercise_records_by_user_id(user_id) do
         IO.puts "Fetching exercises for #{user_id}"
-        ExerciseRecord.fetch_exercise_records_by_user_id(user_id)
+        ExerciseRecord.get_exercise_records(user_id)
     end
 
     def save_exercise_rec(ex_rec, user_id) do
@@ -14,7 +14,7 @@ defmodule Tokyo.Service.ExerciseRecord do
             nil -> Map.put(ex_rec, "ex_rec_id", Ecto.UUID.generate)
             _-> ex_rec
         end
-        |> ExerciseRecord.save_exercise_rec(user_id)
+        |> ExerciseRecord.save_exercise_records(user_id)
     end
 
     def delete_exercise_rec(id, user_id) do
