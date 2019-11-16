@@ -11,8 +11,8 @@ defmodule Tokyo.Application do
       # {Tokyo.Worker, arg}
       # {Plug.Cowboy, scheme: :http, plug: Tokyo.User, options: [port: 3000]},
       {Tokyo.Repo.ExerciseRecord, Application.get_env(:tokyo, :initial_repo_state)},
-      {Plug.Cowboy, scheme: :http, plug: Tokyo.Router,options: [port: 3000]},
-      Tokyo.Repo
+      {Plug.Cowboy, scheme: :http, plug: Tokyo.Router, options: [port: 3000]},
+      # Tokyo.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
