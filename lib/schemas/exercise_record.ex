@@ -1,4 +1,4 @@
-defmodule Tokyo.ExerciseRecord do
+defmodule Tokyo.Schema.ExerciseRecord do
 
     use Ecto.Schema
     import Ecto.Changeset

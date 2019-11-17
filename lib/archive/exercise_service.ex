@@ -5,23 +5,23 @@ defmodule Tokyo.ExerciseService do
     def fetch_exercise_records_by_user_id(user_id) do
         IO.puts "Fetching exercises for #{user_id}"
 
-        Tokyo.ExerciseRecord 
-        |> Ecto.Query.where(user_id: ^user_id) 
+        Tokyo.ExerciseRecord
+        |> Ecto.Query.where(user_id: ^user_id)
         |> Tokyo.Repo.all
 
     end
-    
+
     def create_exercise_record(payload, user_id) do
 
-        prepared_payload = payload 
+        prepared_payload = payload
         |> Map.put(:user_id, user_id)
         |> Map.put(:ex_rec_id, Ecto.UUID.generate)
 
         IO.puts "Saving an exercise for #{user_id}"
         IO.puts "#{inspect prepared_payload}"
-        
+
         %Tokyo.ExerciseRecord{}
-        |> Tokyo.ExerciseRecord.changeset(prepared_payload)
+        |> Tokyo.Schema.ExerciseRecord.changeset(prepared_payload)
         |> Tokyo.Repo.insert
         |> case do
             {:ok, exercise_record} -> exercise_record
@@ -36,7 +36,7 @@ defmodule Tokyo.ExerciseService do
         Tokyo.ExerciseRecord
         |> Ecto.Query.where(ex_rec_id: ^id)
         |> Tokyo.Repo.one
-        |> Tokyo.ExerciseRecord.changeset(payload)
+        |> Tokyo.Schema.ExerciseRecord.changeset(payload)
         |> Tokyo.Repo.update
         |> case do
             {:ok, exercise_record} -> exercise_record

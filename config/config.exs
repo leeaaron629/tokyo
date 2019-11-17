@@ -1,4 +1,5 @@
-use Mix.Config
+import Config
+
 
 config :tokyo, ecto_repos: [Tokyo.Repo]
 
