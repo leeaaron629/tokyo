@@ -6,6 +6,9 @@ defmodule Tokyo.Application do
   use Application
 
   def start(_type, _args) do
+
+    IO.puts "Tokyo starting..."
+
     children = [
       # Starts a worker by calling: Tokyo.Worker.start_link(arg)
       # {Tokyo.Worker, arg}
