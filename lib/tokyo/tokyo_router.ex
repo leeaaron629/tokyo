@@ -9,6 +9,7 @@ defmodule Tokyo.Router do
     plug :dispatch
 
     alias Tokyo.Service.ExerciseRecord, as: ExerciseRecService
+    alias Tokyo.ExerciseRecord
 
     # User Endpoints
 
@@ -22,7 +23,7 @@ defmodule Tokyo.Router do
     end
 
     post "/users/:user_id/exercise-records" do
-        response = conn.body_params 
+        response = conn.body_params
         |> ExerciseRecord.to_struct
         |> ExerciseRecService.save_exercise_rec(user_id)
         |> ExerciseRecord.to_map

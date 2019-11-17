@@ -1,4 +1,4 @@
-defmodule ExerciseRecord do
+defmodule Tokyo.ExerciseRecord do
     defstruct   ex_rec_id: nil,
                 exercise_id: nil,
                 sets: [],
@@ -6,7 +6,7 @@ defmodule ExerciseRecord do
                 completed_date: nil
 
     def to_struct(map) do
-        %ExerciseRecord{
+        %Tokyo.ExerciseRecord{
             ex_rec_id: Map.get(map, "ex_rec_id"),
             exercise_id: Map.get(map, "exercise_id"),
             sets: Map.get(map, "sets"),
@@ -15,7 +15,7 @@ defmodule ExerciseRecord do
         }
     end
 
-    def to_map(struct = %ExerciseRecord{}) do
+    def to_map(struct = %Tokyo.ExerciseRecord{}) do
         Map.delete(struct, :__struct__)
     end
 end

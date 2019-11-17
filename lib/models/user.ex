@@ -1,4 +1,4 @@
-defmodule User do
+defmodule Tokyo.User do
     defstruct   username: nil,
                 email: nil,
                 gender: nil,
