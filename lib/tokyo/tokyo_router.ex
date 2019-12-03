@@ -37,8 +37,6 @@ defmodule Tokyo.Router do
         exercise_record = ExerciseRecord.to_struct(conn.body_params)
         task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
         response = Task.await(task)
-        |> ExerciseRecord.to_struct
-        |> ExerciseRecService.save_exercise_rec(user_id)
         |> ExerciseRecord.to_map
         |> Jason.encode!
         send_resp(conn, 200, response)
