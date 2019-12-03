@@ -26,7 +26,6 @@ defmodule Tokyo.Router do
     post "/users/:user_id/exercise-records" do
         exercise_record = ExerciseRecord.to_struct(conn.body_params)
         task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
-
         response = Task.await(task)
         |> ExerciseRecService.save_exercise_rec(user_id)
         |> ExerciseRecord.to_map
@@ -35,7 +34,9 @@ defmodule Tokyo.Router do
     end
 
     put "/users/:user_id/exercise-records/:ex_rec_id" do
-        response = conn.body_params
+        exercise_record = ExerciseRecord.to_struct(conn.body_params)
+        task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
+        response = Task.await(task)
         |> ExerciseRecord.to_struct
         |> ExerciseRecService.save_exercise_rec(user_id)
         |> ExerciseRecord.to_map
@@ -44,7 +45,8 @@ defmodule Tokyo.Router do
     end
 
     delete "/users/:user_id/exercise-records/:ex_rec_id" do
-        ExerciseRecService.delete_exercise_rec(ex_rec_id, user_id)
+        task = Task.async(ExerciseRecService, :delete_exercise_rec, [ex_rec_id, user_id])
+        response = Task.await(task)
         send_resp(conn, 204, "")
     end
 
