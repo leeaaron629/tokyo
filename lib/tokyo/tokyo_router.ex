@@ -16,15 +16,18 @@ defmodule Tokyo.Router do
     # Exercise Endpoints
 
     get "/users/:user_id/exercise-records" do
-        response = ExerciseRecService.fetch_exercise_records_by_user_id(user_id)
+        task = Task.async(ExerciseRecService, :fetch_exercise_records_by_user_id, [user_id])
+        response = Task.await(task)
         |> Enum.map(fn ex_rec -> ExerciseRecord.to_map(ex_rec) end)
         |> Jason.encode!
         send_resp(conn, 200, response)
     end
 
     post "/users/:user_id/exercise-records" do
-        response = conn.body_params
-        |> ExerciseRecord.to_struct
+        exercise_record = ExerciseRecord.to_struct(conn.body_params)
+        task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
+
+        response = Task.await(task)
         |> ExerciseRecService.save_exercise_rec(user_id)
         |> ExerciseRecord.to_map
         |> Jason.encode!
@@ -46,7 +49,7 @@ defmodule Tokyo.Router do
     end
 
     match _ do
-        send_resp(conn, 404, "URI does not exists in Tokyo")
+        send_resp(conn, 404, "URI does not exists in Tokyo\r\n")
     end
 
 end
