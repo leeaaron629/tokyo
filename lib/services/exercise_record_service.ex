@@ -7,7 +7,12 @@ defmodule Tokyo.Service.ExerciseRecord do
         case exercise_records = ExerciseRecord.get_exercise_records(user_id) do
             nil -> []
             _ -> Map.values(exercise_records)
-        end 
+        end
+    end
+
+    def fetch_an_exercise_record(user_id, ex_rec_id) do
+        IO.puts "Fetching exercise record for #{user_id} [#{ex_rec_id}]"
+
     end
 
     def save_exercise_rec(ex_rec, user_id) do
@@ -27,5 +32,5 @@ defmodule Tokyo.Service.ExerciseRecord do
         IO.puts "Deleting exercise record #{inspect id} from #{inspect user_id}"
         ExerciseRecord.remove_exercise_records(id, user_id)
     end
-    
+
 end
