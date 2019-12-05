@@ -4,8 +4,10 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     def fetch_exercise_records_by_user_id(user_id) do
         IO.puts "Fetching exercises for #{user_id}"
-        ExerciseRecord.get_exercise_records(user_id)
-        |> Map.values
+        case exercise_records = ExerciseRecord.get_exercise_records(user_id) do
+            nil -> []
+            _ -> Map.values(exercise_records)
+        end 
     end
 
     def save_exercise_rec(ex_rec, user_id) do
