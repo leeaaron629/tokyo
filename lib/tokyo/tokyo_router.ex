@@ -57,8 +57,10 @@ defmodule Tokyo.Router do
   end
 
   put "/users/:user_id/exercise-records/:ex_rec_id" do
-    exercise_record = ExerciseRecord.to_struct(conn.body_params)
-    |> Map.put(:ex_rec_id, ex_rec_id)
+    exercise_record =
+      ExerciseRecord.to_struct(conn.body_params)
+      |> Map.put(:ex_rec_id, ex_rec_id)
+
     task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
 
     response =
