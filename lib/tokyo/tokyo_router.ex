@@ -38,7 +38,8 @@ defmodule Tokyo.Router do
         nil -> ""
         _ -> ExerciseRecord.to_map(exercise_record)
       end
-      send_resp(conn, 200, response)
+
+    send_resp(conn, 200, response)
   end
 
   post "/users/:user_id/exercise-records" do
@@ -68,7 +69,7 @@ defmodule Tokyo.Router do
 
   delete "/users/:user_id/exercise-records/:ex_rec_id" do
     task = Task.async(ExerciseRecService, :delete_exercise_rec, [ex_rec_id, user_id])
-    response = Task.await(task)
+    _ = Task.await(task)
     send_resp(conn, 204, "")
   end
 
