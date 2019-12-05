@@ -36,8 +36,13 @@ defmodule Tokyo.Repo.ExerciseRecord do
   end
 
   def handle_cast({:remove_ex_rec, ex_rec_id, user_id}, current_state) do
-    exercise_records = Map.get(current_state, user_id)
-    updated_exercise_records = Map.delete(exercise_records, ex_rec_id)
+    updated_exercise_records =
+      Map.get(current_state, user_id)
+      |> case do
+        nil -> %{}
+        exercise_records -> exercise_records
+      end
+      |> Map.delete(ex_rec_id)
 
     new_state = Map.put(current_state, user_id, updated_exercise_records)
     {:noreply, new_state}
