@@ -14,6 +14,10 @@ Params:
   - fromCompleted
   - toCompleted
 
+**GET - /users/{user_id}/exercise-records/{ex_rec_id}**
+
+Fetch exercise records by user and exercise record Id.
+
 **POST - /users/{user_id}/exercise-records/**
 
 Creates an exercise record for the given user
