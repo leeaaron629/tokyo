@@ -24,6 +24,7 @@ Creates an exercise record for the given user
 
 ```json
 {
+  "workout_id": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
   "exercise_name": "Squat",
   "sets": [
     {"weight": 95, "reps": 5},
@@ -39,6 +40,7 @@ Creates an exercise record for the given user
 
 ```json
 {
+  "workout_id": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
   "exercise_name": "Bench",
   "sets": [
     {"weight": 95, "reps": 5},
