@@ -8,6 +8,7 @@ config :tokyo, Tokyo.Repo,
   username: System.fetch_env!("PSQL_USERNAME"),
   password: System.fetch_env!("PSQL_PASSWORD"),
   hostname: "localhost"
+  # url: "postgres://postgres:postgres@localhost/ecto_simple"
 
 config :tokyo, initial_repo_state: %{}
 

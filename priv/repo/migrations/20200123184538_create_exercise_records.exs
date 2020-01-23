@@ -3,8 +3,10 @@ defmodule Tokyo.Repo.Migrations.CreateExerciseRecords do
 
   def change do
     create table(:exercise_records) do
-      add :ex_rec_id, :string
-      add :ex_id, :string
+      add :ex_rec_id, :uuid
+      add :ex_name, :string
+      add :ex_id, :int
+      add :workout_id, :string
       add :user_id, :string
       add :reps, :integer
       add :weights, :integer
