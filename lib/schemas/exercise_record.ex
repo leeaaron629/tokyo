@@ -6,8 +6,8 @@ defmodule Tokyo.Schema.ExerciseRecord do
     @fields [:ex_rec_id, :ex_id, :user_id, :reps, :weights, :created_date]
 
     schema "exercise_records" do
-        field :ex_rec_id, :uuid
-        field :workout_id, :uuid
+        field :ex_rec_id, :string
+        field :workout_id, :string
         field :ex_id, :string
         field :ex_name, :string
         field :user_id, :string
