@@ -4,6 +4,7 @@ defmodule Tokyo.Model.ExerciseRecord do
     embedded_schema do
         field :workoutId, :string
         field :exerciseName, :string
-        field :sets
+        field :createdDate, :utc_datetime
+        has_many :sets, Tokyo.Model.ExerciseSet
     end
 end
