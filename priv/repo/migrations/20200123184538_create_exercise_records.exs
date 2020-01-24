@@ -8,8 +8,8 @@ defmodule Tokyo.Repo.Migrations.CreateExerciseRecords do
       add :ex_id, :int
       add :workout_id, :string
       add :user_id, :string
-      add :reps, :integer
-      add :weights, :integer
+      add :reps, {:array, :integer}
+      add :weights, {:array, :integer}
       add :created_date, :naive_datetime
     end
   end

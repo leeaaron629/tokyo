@@ -11,8 +11,8 @@ defmodule Tokyo.Schema.ExerciseRecord do
         field :ex_id, :string
         field :ex_name, :string
         field :user_id, :string
-        field :reps, :integer
-        field :weights, :integer
+        field :reps, {:array, :integer}
+        field :weights, {:array, :integer}
         field :created_date, :naive_datetime
     end
 
