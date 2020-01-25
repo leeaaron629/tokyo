@@ -1,5 +1,7 @@
 defmodule Tokyo.Service.ExerciseRecord do
-  alias Tokyo.Repo.ExerciseRecord
+  require Ecto.Query
+  alias Tokyo.Db.ExerciseRecord, as: ExRecDb
+
 
   def fetch_exercise_records_by_user_id(user_id) do
     IO.puts("Fetching exercises for #{user_id}")
@@ -20,23 +22,46 @@ defmodule Tokyo.Service.ExerciseRecord do
     |> Map.get(ex_rec_id, nil)
   end
 
-  def save_exercise_rec(ex_rec, user_id) do
-    IO.puts("Saving exercise record for #{inspect(user_id)}")
-    IO.inspect(ex_rec)
+  def save_ex_rec(ex_rec, user_id) do
+    IO.puts "Saving exercise record for #{user_id}"
 
-    ex_rec_to_save =
-      case Map.get(ex_rec, :ex_rec_id) do
-        nil -> Map.put(ex_rec, :ex_rec_id, Ecto.UUID.generate())
-        _ -> ex_rec
+    [reps, weights] = reps_and_weights_from(ex_rec["sets"])
+
+    ex_rec_to_save = %{
+      user_id: user_id,
+      ex_rec_id: Ecto.UUID.generate,
+      ex_id: ex_rec["exerciseId"],
+      ex_name: ex_rec["exerciseName"],
+      workout_id: ex_rec["workoutId"],
+      reps: reps,
+      weights: weights,
+      created_date: ex_rec["createdDate"],
+    }
+
+    IO.inspect ex_rec_to_save
+
+    %Tokyo.Db.ExerciseRecord{}
+      |> ExRecDb.changeset(ex_rec_to_save)
+      |> Tokyo.Repo.insert
+      |> case do
+        {:ok, exercise_record} -> exercise_record
+        {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
-
-    ExerciseRecord.save_exercise_records(ex_rec_to_save, user_id)
-
-    ex_rec_to_save
   end
 
   def delete_exercise_rec(id, user_id) do
     IO.puts("Deleting exercise record #{inspect(id)} from #{inspect(user_id)}")
     ExerciseRecord.remove_exercise_records(id, user_id)
   end
+
+  defp reps_and_weights_from(sets) do
+    case sets do
+      nil -> [[], []]
+      _ -> 
+          reps = sets |> Enum.map(fn set -> set["reps"] end)
+          weights = sets |> Enum.map(fn set -> set["weight"] end)
+          [reps, weights]
+    end
+  end
+
 end

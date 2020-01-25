@@ -1,4 +1,4 @@
-defmodule Tokyo.User do
+defmodule Tokyo.Db.User do
     use Ecto.Schema
 
     schema "users" do
