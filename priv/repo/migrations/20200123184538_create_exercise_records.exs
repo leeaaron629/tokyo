@@ -10,7 +10,7 @@ defmodule Tokyo.Repo.Migrations.CreateExerciseRecords do
       add :user_id, :string
       add :reps, {:array, :integer}
       add :weights, {:array, :integer}
-      add :created_date, :naive_datetime
+      add :created_date, :datetime
     end
   end
 end
