@@ -44,9 +44,11 @@ defmodule Tokyo.Service.ExerciseRecord do
       |> ExRecDb.changeset(ex_rec_to_save)
       |> Tokyo.Repo.insert
       |> case do
-        {:ok, exercise_record} -> exercise_record
+        {:ok, saved_ex_rec} -> exRecDbToModel(saved_ex_rec)
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
+
+
   end
 
   def delete_exercise_rec(id, user_id) do
@@ -62,6 +64,23 @@ defmodule Tokyo.Service.ExerciseRecord do
           weights = sets |> Enum.map(fn set -> set["weight"] end)
           [reps, weights]
     end
+  end
+
+  defp sets_from(reps, weights) do
+    Enum.zip(reps, weights)
+    |> Enum.map(fn {reps, weight} -> %{"reps" => reps, "weight" => weight} end)
+  end
+
+  defp exRecDbToModel(exRecDb) do
+    %{
+      "userId" => exRecDb.user_id,
+      "exerciseRecId" => exRecDb.ex_rec_id,
+      "exerciseId" => exRecDb.ex_id,
+      "exerciseName" => exRecDb.ex_name,
+      "workoutId" => exRecDb.workout_id,
+      "sets" => sets_from(exRecDb.reps, exRecDb.weights),
+      "createdDate" => exRecDb.created_date
+    }
   end
 
 end

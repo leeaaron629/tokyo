@@ -47,12 +47,14 @@ defmodule Tokyo.Router do
     response = 
       Task.async(ExerciseRecController, :save_ex_rec, [conn.body_params, user_id])
       |> Task.await
+      |> IO.inspect
+      |> Jason.encode!()
 
       # |> ExerciseRecService.save_ex_rec(user_id)
       # |> ExerciseRecord.to_map()
       # |> Jason.encode!()
 
-    send_resp(conn, 201, "")
+    send_resp(conn, 201, response)
   end
 
   # put "/users/:user_id/exercise-records/:ex_rec_id" do
