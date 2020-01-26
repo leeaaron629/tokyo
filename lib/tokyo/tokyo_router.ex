@@ -18,16 +18,14 @@ defmodule Tokyo.Router do
 
   # Exercise Endpoints
 
-  # get "/users/:user_id/exercise-records" do
-  #   task = Task.async(ExerciseRecService, :fetch_exercise_records_by_user_id, [user_id])
+  get "/users/:user_id/exercise-records" do
+    response =
+      Task.async(ExerciseRecController, :get_exercise_records, [conn, user_id])
+      |> Task.await
+      # |> Jason.encode!
 
-  #   response =
-  #     Task.await(task)
-  #     |> Enum.map(fn ex_rec -> ExerciseRecord.to_map(ex_rec) end)
-  #     |> Jason.encode!()
-
-  #   send_resp(conn, 200, response)
-  # end
+    send_resp(conn, 200, response)
+  end
 
   # get "/users/:user_id/exercise-records/:ex_rec_id" do
   #   task = Task.async(ExerciseRecService, :fetch_an_exercise_record, [user_id, ex_rec_id])
@@ -45,14 +43,9 @@ defmodule Tokyo.Router do
 
   post "/users/:user_id/exercise-records" do
     response = 
-      Task.async(ExerciseRecController, :save_ex_rec, [conn.body_params, user_id])
+      Task.async(ExerciseRecController, :save, [conn, user_id])
       |> Task.await
-      |> IO.inspect
-      |> Jason.encode!()
-
-      # |> ExerciseRecService.save_ex_rec(user_id)
-      # |> ExerciseRecord.to_map()
-      # |> Jason.encode!()
+      |> Jason.encode!
 
     send_resp(conn, 201, response)
   end

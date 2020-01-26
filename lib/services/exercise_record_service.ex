@@ -22,7 +22,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     |> Map.get(ex_rec_id, nil)
   end
 
-  def save_ex_rec(ex_rec, user_id) do
+  def save(ex_rec, user_id) do
     IO.puts "Saving exercise record for #{user_id}"
 
     [reps, weights] = reps_and_weights_from(ex_rec["sets"])
