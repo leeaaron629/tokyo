@@ -22,7 +22,7 @@ defmodule Tokyo.Router do
     response =
       Task.async(ExerciseRecController, :get_exercise_records, [conn, user_id])
       |> Task.await
-      # |> Jason.encode!
+      |> Jason.encode!
 
     send_resp(conn, 200, response)
   end

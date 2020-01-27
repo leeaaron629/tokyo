@@ -28,7 +28,7 @@ defmodule Tokyo.Db.ExerciseRecord do
         field :workout_id, :string
         field :reps, {:array, :integer}
         field :weights, {:array, :integer}
-        field :created_date, :datetime
+        field :created_date, :utc_datetime
     end
 
     def changeset(exercise_record, params \\ %{}) do

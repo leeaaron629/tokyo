@@ -1,7 +1,18 @@
 defmodule Tokyo.Service.ExerciseRecord do
   require Ecto.Query
+  import Ecto.Query
   alias Tokyo.Db.ExerciseRecord, as: ExRecDb
 
+  def fetch_exercise_records(from, to, user_id) do
+
+    from(
+      er in Tokyo.Db.ExerciseRecord,
+      where: er.created_date >= ^from and er.created_date < ^to
+    )
+      |> Tokyo.Repo.all
+      |> Enum.map(fn record -> exRecDbToModel(record) end)
+
+  end
 
   def fetch_exercise_records_by_user_id(user_id) do
     IO.puts("Fetching exercises for #{user_id}")
