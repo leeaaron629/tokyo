@@ -4,6 +4,7 @@ defmodule Tokyo.Service.ExerciseRecord do
   alias Tokyo.Db.ExerciseRecord, as: ExRecDb
 
   def fetch_exercise_records(from, to, user_id) do
+    IO.puts "Fetching exercises records from #{from} - #{to} for #{user_id}"
 
     from(
       er in Tokyo.Db.ExerciseRecord,
@@ -14,23 +15,14 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def fetch_exercise_records_by_user_id(user_id) do
-    IO.puts("Fetching exercises for #{user_id}")
-
-    case exercise_records = ExerciseRecord.get_exercise_records(user_id) do
-      nil -> []
-      _ -> Map.values(exercise_records)
-    end
-  end
-
   def fetch_an_exercise_record(user_id, ex_rec_id) do
-    IO.puts("Fetching exercise record for #{user_id} [#{ex_rec_id}]")
+    IO.puts "Fetching an exercise record for #{user_id} [#{ex_rec_id}]"
 
-    case exercise_records = ExerciseRecord.get_exercise_records(user_id) do
-      nil -> %{}
-      _ -> exercise_records
-    end
-    |> Map.get(ex_rec_id, nil)
+    Tokyo.Db.ExerciseRecord
+      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> Tokyo.Repo.one
+      |> exRecDbToModel
+
   end
 
   def save(ex_rec, user_id) do
@@ -53,7 +45,7 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     %Tokyo.Db.ExerciseRecord{}
       |> ExRecDb.changeset(ex_rec_to_save)
-      |> Tokyo.Repo.insert
+      |> Tokyo.Repo.insert_or_update
       |> case do
         {:ok, saved_ex_rec} -> exRecDbToModel(saved_ex_rec)
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"

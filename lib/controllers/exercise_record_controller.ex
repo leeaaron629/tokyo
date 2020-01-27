@@ -26,8 +26,8 @@ defmodule Tokyo.Controller.ExerciseRecord do
 
   end
 
-  def get_exercise_record(user_id, ex_rec_id) do
-    
+  def get_an_exercise_record(user_id, ex_rec_id) do
+    ExRecService.fetch_an_exercise_record(user_id, ex_rec_id)
   end
 
   def save(conn, user_id) do

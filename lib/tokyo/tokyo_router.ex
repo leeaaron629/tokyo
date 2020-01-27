@@ -27,19 +27,14 @@ defmodule Tokyo.Router do
     send_resp(conn, 200, response)
   end
 
-  # get "/users/:user_id/exercise-records/:ex_rec_id" do
-  #   task = Task.async(ExerciseRecService, :fetch_an_exercise_record, [user_id, ex_rec_id])
-  #   exercise_record = Task.await(task)
+  get "/users/:user_id/exercise-records/:ex_rec_id" do
+    response = 
+      Task.async(ExerciseRecController, :get_an_exercise_record, [user_id, ex_rec_id])
+      |> Task.await
+      |> Jason.encode!
 
-  #   response =
-  #     case exercise_record do
-  #       nil -> ""
-  #       _ -> ExerciseRecord.to_map(exercise_record)
-  #     end
-  #     |> Jason.encode!()
-
-  #   send_resp(conn, 200, response)
-  # end
+    send_resp(conn, 200, response)
+  end
 
   post "/users/:user_id/exercise-records" do
     response = 
