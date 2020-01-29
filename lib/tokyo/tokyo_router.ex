@@ -20,7 +20,7 @@ defmodule Tokyo.Router do
 
   get "/users/:user_id/exercise-records" do
     response =
-      Task.async(ExerciseRecController, :get_exercise_records, [conn, user_id])
+      Task.async(ExerciseRecController, :get_all, [conn, user_id])
       |> Task.await
       |> Jason.encode!
 
@@ -29,7 +29,7 @@ defmodule Tokyo.Router do
 
   get "/users/:user_id/exercise-records/:ex_rec_id" do
     response = 
-      Task.async(ExerciseRecController, :get_an_exercise_record, [user_id, ex_rec_id])
+      Task.async(ExerciseRecController, :get_one, [user_id, ex_rec_id])
       |> Task.await
       |> Jason.encode!
 
@@ -45,26 +45,21 @@ defmodule Tokyo.Router do
     send_resp(conn, 201, response)
   end
 
-  # put "/users/:user_id/exercise-records/:ex_rec_id" do
-  #   exercise_record =
-  #     ExerciseRecord.to_struct(conn.body_params)
-  #     |> Map.put(:ex_rec_id, ex_rec_id)
+  put "/users/:user_id/exercise-records/:ex_rec_id" do
+    response =
+      Task.async(ExerciseRecController, :save, [conn, user_id, ex_rec_id])
+      |> Task.await
+      |> Jason.encode!
 
-  #   task = Task.async(ExerciseRecService, :save_exercise_rec, [exercise_record, user_id])
+    send_resp(conn, 200, response)
+  end
 
-  #   response =
-  #     Task.await(task)
-  #     |> ExerciseRecord.to_map()
-  #     |> Jason.encode!()
+  delete "/users/:user_id/exercise-records/:ex_rec_id" do
+    response = 
+      Task.async(ExerciseRecController, :delete, [user_id, ex_rec_id])
 
-  #   send_resp(conn, 200, response)
-  # end
-
-  # delete "/users/:user_id/exercise-records/:ex_rec_id" do
-  #   task = Task.async(ExerciseRecService, :delete_exercise_rec, [ex_rec_id, user_id])
-  #   _ = Task.await(task)
-  #   send_resp(conn, 204, "")
-  # end
+    send_resp(conn, 204, "")
+  end
 
   match _ do
     send_resp(conn, 404, "URI does not exists in Tokyo\r\n")

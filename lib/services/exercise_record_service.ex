@@ -3,7 +3,7 @@ defmodule Tokyo.Service.ExerciseRecord do
   import Ecto.Query
   alias Tokyo.Db.ExerciseRecord, as: ExRecDb
 
-  def fetch_exercise_records(from, to, user_id) do
+  def get_all(from, to, user_id) do
     IO.puts "Fetching exercises records from #{from} - #{to} for #{user_id}"
 
     from(
@@ -15,7 +15,7 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def fetch_an_exercise_record(user_id, ex_rec_id) do
+  def get_one(user_id, ex_rec_id) do
     IO.puts "Fetching an exercise record for #{user_id} [#{ex_rec_id}]"
 
     Tokyo.Db.ExerciseRecord
@@ -51,12 +51,11 @@ defmodule Tokyo.Service.ExerciseRecord do
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
 
-
   end
 
-  def delete_exercise_rec(id, user_id) do
+  def delete(id, user_id) do
     IO.puts("Deleting exercise record #{inspect(id)} from #{inspect(user_id)}")
-    ExerciseRecord.remove_exercise_records(id, user_id)
+
   end
 
   defp reps_and_weights_from(sets) do

@@ -5,7 +5,7 @@ defmodule Tokyo.Controller.ExerciseRecord do
 
   @beg_of_time ~U[1900-01-01 00:00:00Z]
 
-  def get_exercise_records(conn, user_id) do
+  def get_all(conn, user_id) do
   
     from = case conn.query_params["createdFrom"] do
       nil -> {:ok, @beg_of_time, 0}
@@ -21,18 +21,27 @@ defmodule Tokyo.Controller.ExerciseRecord do
       [{:error, errors}, {:error, errors}] -> %{"from" => errors, "to" => errors}
       [{:error, errors}, _] -> %{"to" => errors}
       [_, {:error, errors}] -> %{"from" => errors}
-      [{:ok, from, _}, {:ok, to, _}] -> ExRecService.fetch_exercise_records(from, to, user_id)
+      [{:ok, from, _}, {:ok, to, _}] -> ExRecService.get_all(from, to, user_id)
     end
 
   end
 
-  def get_an_exercise_record(user_id, ex_rec_id) do
-    ExRecService.fetch_an_exercise_record(user_id, ex_rec_id)
+  def get_one(user_id, ex_rec_id) do
+    ExRecService.get_one(user_id, ex_rec_id)
+  end
+  
+  def save(conn, user_id) do
+    conn.body_params
+      |> validate_and_save(user_id)
   end
 
-  def save(conn, user_id) do
+  def save(conn, user_id, ex_rec_id) do
+    conn.body_params
+      |> Map.put("exerciseRecId", ex_rec_id)
+      |> validate_and_save(user_id)
+  end
 
-    ex_rec = conn.body_params
+  def validate_and_save(ex_rec, user_id) do
 
     ex_rec_errors = 
       %ExRecModel{} 
@@ -53,6 +62,11 @@ defmodule Tokyo.Controller.ExerciseRecord do
       [] -> ExRecService.save(ex_rec, user_id)
       _ -> {:validation_errors, errors}
     end
+
+  end
+
+  def delete(conn, user_id, ex_rec_id) do
+
   end
 
   def to_datetime(iso8601_datetime) do

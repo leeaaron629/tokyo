@@ -3,6 +3,7 @@ defmodule Tokyo.Model.ExerciseRecord do
     import Ecto.Changeset
 
     embedded_schema do
+        field :exerciseRecId, :binary_id
         field :workoutId, :string
         field :exerciseName, :string
         field :createdDate, :utc_datetime
