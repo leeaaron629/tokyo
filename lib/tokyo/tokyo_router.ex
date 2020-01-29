@@ -56,9 +56,10 @@ defmodule Tokyo.Router do
 
   delete "/users/:user_id/exercise-records/:ex_rec_id" do
     response = 
-      Task.async(ExerciseRecController, :delete, [user_id, ex_rec_id])
-
-    send_resp(conn, 204, "")
+      Task.async(ExerciseRecController, :delete, [conn, user_id, ex_rec_id])
+      |> Task.await
+      
+    send_resp(conn, 204, "Success")
   end
 
   match _ do

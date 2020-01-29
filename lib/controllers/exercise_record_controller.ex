@@ -65,8 +65,8 @@ defmodule Tokyo.Controller.ExerciseRecord do
 
   end
 
-  def delete(conn, user_id, ex_rec_id) do
-
+  def delete(_conn, user_id, ex_rec_id) do
+    ExRecService.delete(user_id, ex_rec_id)
   end
 
   def to_datetime(iso8601_datetime) do

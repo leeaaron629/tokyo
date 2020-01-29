@@ -53,9 +53,17 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def delete(id, user_id) do
-    IO.puts("Deleting exercise record #{inspect(id)} from #{inspect(user_id)}")
-
+  def delete(user_id, ex_rec_id) do
+    IO.puts "Deleting exercise record #{inspect ex_rec_id} from #{inspect user_id}"
+    Tokyo.Db.ExerciseRecord
+      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> Tokyo.Repo.one
+      |> IO.inspect
+      |> Tokyo.Repo.delete
+      |> case do
+        {:ok, ex_rec} -> IO.puts "Deleted #{inspect ex_rec}"
+        {:error, changeset} -> IO.puts "Error occured during deletion: #{inspect changeset}"
+      end
   end
 
   defp reps_and_weights_from(sets) do
@@ -73,6 +81,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     |> Enum.map(fn {reps, weight} -> %{"reps" => reps, "weight" => weight} end)
   end
 
+  defp exRecDbToModel(nil), do: %{}
   defp exRecDbToModel(exRecDb) do
     %{
       "userId" => exRecDb.user_id,
