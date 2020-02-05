@@ -13,6 +13,7 @@ defmodule Tokyo.Application do
       # Starts a worker by calling: Tokyo.Worker.start_link(arg)
       # {Tokyo.Worker, arg}
       # {Plug.Cowboy, scheme: :http, plug: Tokyo.User, options: [port: 3000]},
+      Tokyo.Repo,
       {Tokyo.Repo.ExerciseRecord, Application.get_env(:tokyo, :initial_repo_state)},
       {Plug.Cowboy, scheme: :http, plug: Tokyo.Router, options: [port: 3000]},
       # Tokyo.Repo

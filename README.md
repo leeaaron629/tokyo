@@ -24,8 +24,8 @@ Creates an exercise record for the given user
 
 ```json
 {
-  "workout_id": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
-  "exercise_name": "Squat",
+  "workoutId": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
+  "exerciseName": "Squat",
   "sets": [
     {"weight": 95, "reps": 5},
     {"weight": 115, "reps": 5},
