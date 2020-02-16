@@ -31,8 +31,7 @@ Creates an exercise record for the given user
     {"weight": 115, "reps": 5},
     {"weight": 135, "reps": 10}
   ],
-  "created_date": "2019-11-02T15:16:18.382Z",
-  "completed_date": "2019-11-02T15:16:18.382Z"
+  "createdDate": "2019-11-02T15:16:18.382Z"
 }
 ```
 
@@ -40,8 +39,8 @@ Creates an exercise record for the given user
 
 ```json
 {
-  "workout_id": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
-  "exercise_name": "Bench",
+  "workoutId": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
+  "exerciseName": "Bench",
   "sets": [
     {"weight": 95, "reps": 5},
     {"weight": 115, "reps": 5},
@@ -49,8 +48,7 @@ Creates an exercise record for the given user
     {"weight": 155, "reps": 8},
     {"weight": 175, "reps": 6}
   ],
-  "created_date": "2019-11-02T15:16:18.382Z",
-  "completed_date": "2019-11-02T15:18:26.079Z"
+  "createdDate": "2019-11-02T15:16:18.382Z"
 }
 ```
 
