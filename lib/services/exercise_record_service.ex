@@ -30,9 +30,14 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     [reps, weights] = reps_and_weights_from(ex_rec["sets"])
 
+    ex_rec_id = case ex_rec["exerciseRecId"] do
+      nil -> Ecto.UUID.generate
+      _ -> ex_rec["exerciseRecId"]
+    end
+
     ex_rec_to_save = %{
       user_id: user_id,
-      ex_rec_id: Ecto.UUID.generate,
+      ex_rec_id: ex_rec_id,
       ex_id: ex_rec["exerciseId"],
       ex_name: ex_rec["exerciseName"],
       workout_id: ex_rec["workoutId"],
