@@ -32,7 +32,6 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     ex_rec_to_save = %{
       user_id: user_id,
-      ex_rec_id: Ecto.UUID.generate,
       ex_id: ex_rec["exerciseId"],
       ex_name: ex_rec["exerciseName"],
       workout_id: ex_rec["workoutId"],
@@ -41,15 +40,55 @@ defmodule Tokyo.Service.ExerciseRecord do
       created_date: ex_rec["createdDate"],
     }
 
-    IO.inspect ex_rec_to_save
+    ex_rec_id = case ex_rec["exerciseRecId"] do
+      nil ->
+        ex_rec_to_save 
+          |> Map.put(:ex_rec_id, Ecto.UUID.generate)
+          |> create
+
+      _ ->
+        ex_rec_to_save
+          |> Map.put(:ex_rec_id, ex_rec["exerciseRecId"])
+          |> update
+    end
+
+  end
+
+  def create(ex_rec) do
+
+    IO.puts "Creating exercise record #{inspect ex_rec}"
 
     %Tokyo.Db.ExerciseRecord{}
-      |> ExRecDb.changeset(ex_rec_to_save)
+      |> ExRecDb.changeset(ex_rec)
       |> Tokyo.Repo.insert_or_update
       |> case do
-        {:ok, saved_ex_rec} -> exRecDbToModel(saved_ex_rec)
+        {:ok, created_ex_rec} -> exRecDbToModel(created_ex_rec)
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
+
+  end
+
+  def update(ex_rec) do
+
+    IO.puts "Updating exercise record #{inspect ex_rec}"
+
+    user_id = ex_rec[:user_id]
+    ex_rec_id = ex_rec[:ex_rec_id]
+
+    IO.puts "user_id: #{user_id} ex_rec_id: #{ex_rec_id}"
+
+    current = Tokyo.Db.ExerciseRecord
+      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> Tokyo.Repo.one
+
+    IO.puts "Current: #{inspect current}"
+
+    Tokyo.Db.ExerciseRecord.changeset(current, ex_rec)
+      |> Tokyo.Repo.update
+      |> case do
+          {:ok, updated_ex_rec} -> exRecDbToModel(updated_ex_rec)
+          {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"
+        end
 
   end
 

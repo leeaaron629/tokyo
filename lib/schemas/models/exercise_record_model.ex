@@ -12,6 +12,6 @@ defmodule Tokyo.Model.ExerciseRecord do
 
     def changeset(exercise_rec, params \\ %{}) do
         exercise_rec
-        |> cast(params, [:sets, :workoutId, :exerciseName, :createdDate])
+        |> cast(params, [:sets, :workoutId, :exerciseName, :createdDate, :exerciseRecId])
     end
 end
