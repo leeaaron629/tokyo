@@ -2,6 +2,10 @@
 
 RESTful APIs for Exercise Records
 
+## TODO
+
+- Create unit tests for exercise record service
+
 ## Endpoints
 
 **GET - /users/{user_id}/exercise-records/**
@@ -42,7 +46,7 @@ Creates an exercise record for the given user
   "workoutId": "361a2ad1-25ce-4448-ab48-28a034c1ad09",
   "exerciseName": "Bench",
   "sets": [
-    {"weight": 95, "reps": 5},
+    {"weight": 95, "reps": 5},`
     {"weight": 115, "reps": 5},
     {"weight": 135, "reps": 10},
     {"weight": 155, "reps": 8},
