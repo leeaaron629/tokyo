@@ -8,7 +8,7 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     from(
       er in Tokyo.Db.ExerciseRecord,
-      where: er.created_date >= ^from and er.created_date < ^to and er.user_id = ^user_id
+      where: er.created_date >= ^from and er.created_date < ^to and er.user_id == ^user_id
     )
       |> Tokyo.Repo.all
       |> Enum.map(fn record -> exRecDbToModel(record) end)
