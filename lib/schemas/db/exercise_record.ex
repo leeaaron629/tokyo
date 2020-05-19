@@ -18,6 +18,7 @@ defmodule Tokyo.Db.ExerciseRecord do
         :ex_name, 
         :user_id, 
         :created_date,
+        :workout_id
     ]
 
     schema "exercise_records" do

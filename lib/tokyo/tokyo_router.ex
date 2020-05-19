@@ -58,7 +58,6 @@ defmodule Tokyo.Router do
     response = 
       Task.async(ExerciseRecController, :delete, [conn, user_id, ex_rec_id])
       |> Task.await
-      
     send_resp(conn, 204, "Success")
   end
 
