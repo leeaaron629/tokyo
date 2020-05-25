@@ -60,6 +60,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     # TODO - Remove when ready!
     ex_rec
       |> Map.put("ex_id", Ecto.UUID.generate) 
+      |> Map.put("workout_id", Ecto.UUID.generate)
 
     IO.puts "Creating exercise record #{inspect ex_rec}"
 
