@@ -36,8 +36,8 @@ defmodule Tokyo.Service.ExerciseRecord do
       ex_id: ex_rec["exerciseId"],
       ex_name: ex_rec["exerciseName"],
       workout_id: ex_rec["workoutId"],
-      reps: reps,
-      weights: weights,
+      # reps: reps,
+      # weights: weights,
       created_date: ex_rec["createdDate"],
     }
 
@@ -56,11 +56,16 @@ defmodule Tokyo.Service.ExerciseRecord do
   end
 
   def create(ex_rec) do
+    
+    # TODO - Remove when ready!
+    ex_rec
+      |> Map.put("ex_id", Ecto.UUID.generate) 
 
     IO.puts "Creating exercise record #{inspect ex_rec}"
 
     %Tokyo.Db.ExerciseRecord{}
       |> ExRecDb.changeset(ex_rec)
+      |> IO.inspect
       |> Tokyo.Repo.insert_or_update
       |> case do
         {:ok, created_ex_rec} -> exRecDbToModel(created_ex_rec)
@@ -129,7 +134,7 @@ defmodule Tokyo.Service.ExerciseRecord do
       "exerciseId" => exRecDb.ex_id,
       "exerciseName" => exRecDb.ex_name,
       "workoutId" => exRecDb.workout_id,
-      "sets" => sets_from(exRecDb.reps, exRecDb.weights),
+      # "sets" => sets_from(exRecDb.reps, exRecDb.weights),
       "createdDate" => exRecDb.created_date
     }
   end

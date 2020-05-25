@@ -3,18 +3,19 @@ defmodule Tokyo.Db.ExerciseRecord do
     use Ecto.Schema
     import Ecto.Changeset
 
+    @schema_prefix "tokyo"
+    @primary_key {:ex_rec_id, :binary_id, []}
+
     @fields [
-        :ex_rec_id, 
+        :ex_rec_id,
         :ex_id, 
         :ex_name, 
         :user_id,
         :workout_id, 
-        :reps, 
-        :weights, 
         :created_date,
     ]
+
     @required_fields [
-        :ex_rec_id,
         :ex_name, 
         :user_id, 
         :created_date,
@@ -22,13 +23,10 @@ defmodule Tokyo.Db.ExerciseRecord do
     ]
 
     schema "exercise_records" do
-        field :ex_rec_id, :binary_id
-        field :ex_id, :string
+        field :ex_id, :integer
         field :ex_name, :string
         field :user_id, :string
-        field :workout_id, :string
-        field :reps, {:array, :integer}
-        field :weights, {:array, :integer}
+        field :workout_id, :binary_id
         field :created_date, :utc_datetime
     end
 
