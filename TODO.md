@@ -1,0 +1,1 @@
+1) Fix unit tests - ExerciseService fails to compile.

@@ -1,6 +1,6 @@
 -- Create Exercise Record Table
 
-create table exercise_record 
+create table exercise_records
   ( 
      ex_rec_id    uuid not null, 
      ex_name      text not null, 
