@@ -4,7 +4,7 @@ create table exercise_sets
   ( 
      ex_set_id uuid not null, 
      ex_rec_id uuid references exercise_records(ex_rec_id), 
-     reps      integer not null default 0, 
-     sets      integer not null default 0, 
+     rep      integer not null default 0, 
+     "set"      integer not null default 0, 
      primary key(ex_set_id) 
   );
