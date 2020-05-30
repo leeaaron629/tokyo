@@ -29,19 +29,32 @@ defmodule Tokyo.Controller.ExerciseRecord do
   def get_one(user_id, ex_rec_id) do
     ExRecService.get_one(user_id, ex_rec_id)
   end
-  
-  def save(conn, user_id) do
-    conn.body_params
-      |> validate_and_save(user_id)
-  end
 
+  # TODO - Combine the two save methods below
   def save(conn, user_id, ex_rec_id) do
-    conn.body_params
+    ex_rec = conn.body_params
       |> Map.put("exerciseRecId", ex_rec_id)
-      |> validate_and_save(user_id)
+    
+    case validate(ex_rec) do
+      [] -> ExRecService.save(ex_rec, user_id)
+      errors -> {:validation_errors, erros}
+    end
   end
 
-  def validate_and_save(ex_rec, user_id) do
+  def save(conn, user_id) do 
+    ex_rec = conn.body_params
+    
+    case validate(ex_rec) do
+      [] -> ExRecService.save(ex_rec, user_id)
+      errors -> {:validation_errors, errors}
+    end
+  end
+
+  def delete(_conn, user_id, ex_rec_id) do
+    ExRecService.delete(user_id, ex_rec_id)
+  end
+
+  defp validate(ex_rec, user_id) do
 
     ex_rec_errors = 
       %ExRecModel{} 
@@ -56,17 +69,8 @@ defmodule Tokyo.Controller.ExerciseRecord do
       nil -> []
     end
 
-    errors = ex_rec_errors ++ ex_set_errors
+    ex_rec_errors ++ ex_set_errors
 
-    case List.flatten(errors) do
-      [] -> ExRecService.save(ex_rec, user_id)
-      _ -> {:validation_errors, errors}
-    end
-
-  end
-
-  def delete(_conn, user_id, ex_rec_id) do
-    ExRecService.delete(user_id, ex_rec_id)
   end
 
   def to_datetime(iso8601_datetime) do
