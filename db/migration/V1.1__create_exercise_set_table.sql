@@ -8,3 +8,5 @@ create table exercise_sets
      reps            integer not null default 0, 
      primary key(ex_set_id) 
   );
+
+create index exercise_sets_ex_rec_id_idx on exercise_sets (ex_rec_id);  

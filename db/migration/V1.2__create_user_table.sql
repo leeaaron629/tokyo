@@ -10,3 +10,5 @@ create table users
      age        integer, 
      primary key(user_name) 
   ); 
+
+create index users_email_idx on users (email);
