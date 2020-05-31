@@ -4,6 +4,7 @@ defmodule Tokyo.Service.ExerciseSet do
   alias Tokyo.Db.ExerciseSet
 
   def get_all(ex_rec_id) do
+    IO.puts "Getting all exercise sets for #{ex_rec_id}..."
     from(
       es in Tokyo.Db.ExerciseSet,
       where: es.ex_rec_id == ^ex_rec_id
@@ -14,8 +15,12 @@ defmodule Tokyo.Service.ExerciseSet do
   end
 
   def get_one(ex_set_id) do
-
+    IO.puts "Getting an exercise set - #{ex_set_id}..."
     
+    Tokyo.Db.ExerciseSet
+      |> where(ex_set_id: ^ex_set_id)
+      |> Tokyo.Repo.one
+      |> to_model
   end
 
   def save(ex_rec_id, ex_sets) do

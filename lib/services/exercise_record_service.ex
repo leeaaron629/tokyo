@@ -13,7 +13,7 @@ defmodule Tokyo.Service.ExerciseRecord do
       order_by: [desc: er.created_date]
     )
       |> Tokyo.Repo.all
-      |> Enum.map(fn record -> exRecDbToModel(record) end)
+      |> Enum.map(fn record -> to_model(record) end)
       |> Enum.map(
         fn record -> 
           Map.put(record, "sets", ExSetService.get_all(record["exerciseRecId"])) 
@@ -28,7 +28,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     Tokyo.Db.ExerciseRecord
       |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
-      |> exRecDbToModel
+      |> to_model
       |> Map.put("sets", ExSetService.get_all(ex_rec_id))
   end
 
@@ -77,7 +77,7 @@ defmodule Tokyo.Service.ExerciseRecord do
       |> IO.inspect
       |> Tokyo.Repo.insert_or_update
       |> case do
-        {:ok, created_ex_rec} -> exRecDbToModel(created_ex_rec)
+        {:ok, created_ex_rec} -> to_model(created_ex_rec)
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
   end
@@ -100,7 +100,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     Tokyo.Db.ExerciseRecord.changeset(current, ex_rec)
       |> Tokyo.Repo.update
       |> case do
-          {:ok, updated_ex_rec} -> exRecDbToModel(updated_ex_rec)
+          {:ok, updated_ex_rec} -> to_model(updated_ex_rec)
           {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"
         end
 
@@ -134,8 +134,8 @@ defmodule Tokyo.Service.ExerciseRecord do
     |> Enum.map(fn {reps, weight} -> %{"reps" => reps, "weight" => weight} end)
   end
 
-  defp exRecDbToModel(nil), do: %{}
-  defp exRecDbToModel(exRecDb) do
+  defp to_model(nil), do: %{}
+  defp to_model(exRecDb) do
     %{
       "userId" => exRecDb.user_id,
       "exerciseRecId" => exRecDb.ex_rec_id,
