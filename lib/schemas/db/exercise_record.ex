@@ -23,7 +23,7 @@ defmodule Tokyo.Db.ExerciseRecord do
     ]
 
     schema "exercise_records" do
-        field :ex_id, :integer
+        field :ex_id, :binary_id
         field :ex_name, :string
         field :user_id, :string
         field :workout_id, :binary_id

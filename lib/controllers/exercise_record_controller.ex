@@ -37,7 +37,7 @@ defmodule Tokyo.Controller.ExerciseRecord do
     
     case validate(ex_rec) do
       [] -> ExRecService.save(ex_rec, user_id)
-      errors -> {:validation_errors, erros}
+      errors -> {:validation_errors, errors}
     end
   end
 
@@ -54,13 +54,13 @@ defmodule Tokyo.Controller.ExerciseRecord do
     ExRecService.delete(user_id, ex_rec_id)
   end
 
-  defp validate(ex_rec, user_id) do
-
+  defp validate(ex_rec) do
+    # Validate the exercise record 
     ex_rec_errors = 
       %ExRecModel{} 
       |> ExRecModel.changeset(ex_rec)
       |> Map.get(:errors)
-    
+    # Validate the exercise sets
     ex_set_errors = case ex_rec["sets"] do
       sets -> 
         sets
@@ -68,9 +68,10 @@ defmodule Tokyo.Controller.ExerciseRecord do
           |> Enum.map(fn set_changeset -> set_changeset.errors end)
       nil -> []
     end
-
+    # Return errors if there are any
     ex_rec_errors ++ ex_set_errors
-
+      |> List.flatten
+      |> IO.inspect
   end
 
   def to_datetime(iso8601_datetime) do
