@@ -7,12 +7,11 @@ defmodule Tokyo.Model.ExerciseRecord do
         field :workoutId, :binary_id
         field :exerciseName, :string
         field :createdDate, :utc_datetime
-        # field :sets, {:array, {:map, :integer}}
+        field :sets, {:array, {:map, :integer}}
     end
 
     def changeset(exercise_rec, params \\ %{}) do
         exercise_rec
-        |> cast(params, [#:sets,
-         :workoutId, :exerciseName, :createdDate, :exerciseRecId, :workoutId])
+        |> cast(params, [:workoutId, :exerciseName, :createdDate, :exerciseRecId, :sets])
     end
 end

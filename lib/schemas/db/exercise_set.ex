@@ -19,9 +19,8 @@ defmodule Tokyo.Db.ExerciseSet do
   ]
 
   schema "exercise_sets" do
-    field :ex_set_id, :binary_id,
-    field :ex_rec_id, :binary_id,
-    field :weight, :integer,
+    field :ex_rec_id, :binary_id
+    field :weight, :integer
     field :reps, :integer 
   end
 

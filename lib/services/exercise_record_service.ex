@@ -2,6 +2,7 @@ defmodule Tokyo.Service.ExerciseRecord do
   require Ecto.Query
   import Ecto.Query
   alias Tokyo.Db.ExerciseRecord, as: ExRecDb
+  alias Tokyo.Service.ExerciseSet, as: ExSetService
 
   def get_all(from, to, user_id) do
     IO.puts "Fetching exercises records from #{from} - #{to} for #{user_id}"
@@ -27,21 +28,17 @@ defmodule Tokyo.Service.ExerciseRecord do
   end
 
   def save(ex_rec, user_id) do
-    IO.puts "Saving exercise record for #{user_id}"
-
-    [reps, weights] = reps_and_weights_from(ex_rec["sets"])
+    IO.puts "Saving exercise record for #{user_id} #{inspect ex_rec}"
 
     ex_rec_to_save = %{
       user_id: user_id,
       ex_id: ex_rec["exerciseId"],
       ex_name: ex_rec["exerciseName"],
       workout_id: ex_rec["workoutId"],
-      # reps: reps,
-      # weights: weights,
       created_date: ex_rec["createdDate"],
     }
 
-    ex_rec_id = case ex_rec["exerciseRecId"] do
+    saved_ex_rec = case ex_rec["exerciseRecId"] do
       nil ->
         ex_rec_to_save 
           |> Map.put(:ex_rec_id, Ecto.UUID.generate)
@@ -52,25 +49,32 @@ defmodule Tokyo.Service.ExerciseRecord do
           |> update
     end
 
+    IO.puts "Result from #{inspect ex_rec}"
+    ex_rec_id = saved_ex_rec["exerciseRecId"]
+
+    IO.puts "Saving exercise sets #{inspect ex_rec["sets"]} with #{ex_rec_id}..."
+    saved_sets = ex_rec_id
+      |> ExSetService.save(ex_rec["sets"])
+      |> case do
+          {:ok, sets} -> sets
+          {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
+        end
+     
+    saved_ex_rec
+      |> Map.put("sets", saved_sets)
+
   end
 
   def create(ex_rec) do
-
-    new_ex_rec = ex_rec
-      |> Map.put(:ex_id, 1) 
-      |> Map.put(:workout_id, Ecto.UUID.generate)
-
-    IO.puts "Creating exercise record #{inspect new_ex_rec}"
-
+    IO.puts "Creating exercise record #{inspect ex_rec}"
     %Tokyo.Db.ExerciseRecord{}
-      |> ExRecDb.changeset(new_ex_rec)
+      |> ExRecDb.changeset(ex_rec)
       |> IO.inspect
       |> Tokyo.Repo.insert_or_update
       |> case do
         {:ok, created_ex_rec} -> exRecDbToModel(created_ex_rec)
         {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
       end
-
   end
 
   def update(ex_rec) do
@@ -133,7 +137,6 @@ defmodule Tokyo.Service.ExerciseRecord do
       "exerciseId" => exRecDb.ex_id,
       "exerciseName" => exRecDb.ex_name,
       "workoutId" => exRecDb.workout_id,
-      # "sets" => sets_from(exRecDb.reps, exRecDb.weights),
       "createdDate" => exRecDb.created_date
     }
   end
