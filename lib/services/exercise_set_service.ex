@@ -3,6 +3,21 @@ defmodule Tokyo.Service.ExerciseSet do
   import Ecto.Query
   alias Tokyo.Db.ExerciseSet
 
+  def get_all(ex_rec_id) do
+    from(
+      es in Tokyo.Db.ExerciseSet,
+      where: es.ex_rec_id == ^ex_rec_id
+    )
+      |> Tokyo.Repo.all
+      |> Enum.map(fn a_set -> to_model(a_set) end)
+      |> IO.inspect
+  end
+
+  def get_one(ex_set_id) do
+
+    
+  end
+
   def save(ex_rec_id, ex_sets) do
     IO.puts "Creating exercise sets for #{inspect ex_rec_id}..."
     
@@ -47,5 +62,14 @@ defmodule Tokyo.Service.ExerciseSet do
       |> Tokyo.Db.ExerciseSet.changeset(ex_set)
   end   
 
+  defp to_model(ex_set_db) do
+    IO.inspect ex_set_db
+    %{
+      "exerciseSetId" => ex_set_db.ex_set_id,
+      "exerciseRecId" => ex_set_db.ex_rec_id,
+      "reps" => ex_set_db.reps,
+      "weight" => ex_set_db.weight,
+    }
+  end
 
 end

@@ -14,6 +14,11 @@ defmodule Tokyo.Service.ExerciseRecord do
     )
       |> Tokyo.Repo.all
       |> Enum.map(fn record -> exRecDbToModel(record) end)
+      |> Enum.map(
+        fn record -> 
+          Map.put(record, "sets", ExSetService.get_all(record["exerciseRecId"])) 
+        end
+      )
 
   end
 
@@ -24,7 +29,7 @@ defmodule Tokyo.Service.ExerciseRecord do
       |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
       |> exRecDbToModel
-
+      |> Map.put("sets", ExSetService.get_all(ex_rec_id))
   end
 
   def save(ex_rec, user_id) do
