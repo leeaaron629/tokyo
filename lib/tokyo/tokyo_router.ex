@@ -24,7 +24,9 @@ defmodule Tokyo.Router do
       |> Task.await
       |> Jason.encode!
 
-    send_resp(conn, 200, response)
+    conn
+      |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
+      |> send_resp(200, response)
   end
 
   get "/users/:user_id/exercise-records/:ex_rec_id" do
@@ -33,7 +35,9 @@ defmodule Tokyo.Router do
       |> Task.await
       |> Jason.encode!
 
-    send_resp(conn, 200, response)
+    conn
+      |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
+      |> send_resp(200, response)
   end
 
   post "/users/:user_id/exercise-records" do
@@ -42,7 +46,9 @@ defmodule Tokyo.Router do
       |> Task.await
       |> Jason.encode!
 
-    send_resp(conn, 201, response)
+    conn
+      |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
+      |> send_resp(201, response)
   end
 
   put "/users/:user_id/exercise-records/:ex_rec_id" do
@@ -51,14 +57,19 @@ defmodule Tokyo.Router do
       |> Task.await
       |> Jason.encode!
 
-    send_resp(conn, 200, response)
+    conn
+      |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
+      |> send_resp(200, response)
   end
 
   delete "/users/:user_id/exercise-records/:ex_rec_id" do
     response = 
       Task.async(ExerciseRecController, :delete, [conn, user_id, ex_rec_id])
       |> Task.await
-    send_resp(conn, 204, "Success")
+    
+    conn
+      |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
+      |> send_resp(204, response)
   end
 
   match _ do
