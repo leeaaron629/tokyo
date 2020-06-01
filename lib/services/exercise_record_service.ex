@@ -61,7 +61,7 @@ defmodule Tokyo.Service.ExerciseRecord do
     ExSetService.delete_ex_sets(ex_rec_id)    
 
     IO.puts "Saving exercise sets #{inspect ex_rec["sets"]} with #{ex_rec_id}..."
-    saved_sets =case ExSetService.save_all(ex_rec["sets"], ex_rec_id) do
+    saved_sets = case ExSetService.save_all(ex_rec["sets"], ex_rec_id) do
       {:ok, sets} -> sets
       {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
     end
