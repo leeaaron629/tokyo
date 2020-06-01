@@ -23,8 +23,8 @@ defmodule Tokyo.Service.ExerciseSet do
       |> to_model
   end
 
-  def save(ex_rec_id, ex_sets) do
-    IO.puts "Creating exercise sets for #{inspect ex_rec_id}..."
+  def save_all(ex_sets, ex_rec_id) do
+    IO.puts "Creating exercise sets for #{inspect ex_rec_id}... #{inspect ex_sets}"
     
     sets_to_save = Enum.map(ex_sets, 
       fn a_set -> 
@@ -52,7 +52,8 @@ defmodule Tokyo.Service.ExerciseSet do
     case results do 
       {n, nil} -> 
         IO.puts "Created #{n} exercise sets for #{ex_rec_id}..."
-        {:ok, sets_to_save}
+        model_sets = sets_to_save |> Enum.map(fn set -> to_model(set) end)
+        {:ok, model_sets}
       {n, inserted} -> 
         IO.puts "Created #{n} exercise sets for #{ex_rec_id}... #{inspect inserted}"
         {:ok, inserted}
@@ -60,7 +61,65 @@ defmodule Tokyo.Service.ExerciseSet do
         IO.puts "Errors creating exercise sets for #{ex_rec_id}: #{inspect error}"
         {:error, error}
     end
+    |> IO.inspect
   end
+
+  def save_one(ex_set, ex_rec_id) do
+    case ex_set["ex_set_id"] do
+      nil -> create(ex_set)
+      _ -> update(ex_set)
+    end
+  end
+
+  defp create(ex_set) do
+    IO.puts "Creating exercise set #{inspect ex_set}"
+    %Tokyo.Db.ExerciseSet{}
+      |> Tokyo.Db.ExerciseSet.changeset(ex_set)
+      |> Tokyo.Repo.insert_or_update
+      |> case do
+        {:ok, created_ex_set} -> to_model(created_ex_set)
+        {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
+      end
+  end
+
+  defp update(ex_set) do
+    IO.puts "Updating exercise set #{inspect ex_set}"
+    ex_set_id = ex_set.ex_set_id
+    ex_rec_id = ex_set.ex_rec_id
+    current = Tokyo.Db.ExerciseSet
+      |> where(ex_set_id: ^ex_set_id, ex_rec_id: ^ex_rec_id)
+      |> Tokyo.Repo.one
+
+    Tokyo.Db.ExerciseSet.changeset(current, ex_set)
+      |> Tokyo.Repo.update
+      |> case do
+        {:ok, updated_ex_sec} -> to_model(updated_ex_sec)
+        {:error, changeset} -> IO.puts "Error updating exercise set: #{inspect changeset}"
+      end
+      
+  end
+  
+  def delete_ex_set(ex_set_id) do
+    Tokyo.Db.ExerciseSet
+      |> where(ex_set_id: ^ex_set_id)
+      |> Tokyo.Repo.one
+      |> Tokyo.Repo.delete
+      |> case do
+        {:ok, ex_set} -> IO.puts "Deleted #{inspect ex_set}"
+        {:error, changeset} -> IO.puts "Error occured during deletion: #{inspect changeset}"
+      end
+  end
+
+  def delete_ex_sets(ex_rec_id) do
+    IO.puts "Deleting all exercise sets of exercise record - #{ex_rec_id}" 
+    
+    results = from(
+      es in Tokyo.Db.ExerciseSet,
+      where: es.ex_rec_id == ^ex_rec_id
+    )
+      |> Tokyo.Repo.delete_all
+  end
+
 
   defp validate(ex_set) do
     %Tokyo.Db.ExerciseSet{}
@@ -71,7 +130,6 @@ defmodule Tokyo.Service.ExerciseSet do
     IO.inspect ex_set_db
     %{
       "exerciseSetId" => ex_set_db.ex_set_id,
-      "exerciseRecId" => ex_set_db.ex_rec_id,
       "reps" => ex_set_db.reps,
       "weight" => ex_set_db.weight,
     }
