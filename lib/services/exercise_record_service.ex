@@ -57,19 +57,22 @@ defmodule Tokyo.Service.ExerciseRecord do
     IO.puts "Result from #{inspect ex_rec}"
     ex_rec_id = saved_ex_rec["exerciseRecId"]
 
+    # Delete all exercise sets of this ex_rec
+    ExSetService.delete_ex_sets(ex_rec_id)    
+
     IO.puts "Saving exercise sets #{inspect ex_rec["sets"]} with #{ex_rec_id}..."
-    saved_sets = ex_rec_id
-      |> ExSetService.save(ex_rec["sets"])
-      |> case do
-          {:ok, sets} -> sets
-          {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
-        end
+    saved_sets =case ExSetService.save_all(ex_rec["sets"], ex_rec_id) do
+      {:ok, sets} -> sets
+      {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
+    end
      
     saved_ex_rec
       |> Map.put("sets", saved_sets)
+      |> IO.inspect
 
   end
 
+  # TODO - Check if it's possible to combine create & update into insert_or_update
   def create(ex_rec) do
     IO.puts "Creating exercise record #{inspect ex_rec}"
     %Tokyo.Db.ExerciseRecord{}
@@ -101,8 +104,8 @@ defmodule Tokyo.Service.ExerciseRecord do
       |> Tokyo.Repo.update
       |> case do
           {:ok, updated_ex_rec} -> to_model(updated_ex_rec)
-          {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"
-        end
+          {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"  
+      end
 
   end
 
