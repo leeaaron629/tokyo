@@ -31,7 +31,7 @@ defmodule Tokyo.Router do
 
   get "/users/:user_id/exercise-records/:ex_rec_id" do
     response = 
-      Task.async(ExerciseRecController, :get_one, [user_id, ex_rec_id])
+      Task.async(ExerciseRecController, :get_one, [ex_rec_id])
       |> Task.await
       |> Jason.encode!
 
@@ -64,12 +64,13 @@ defmodule Tokyo.Router do
 
   delete "/users/:user_id/exercise-records/:ex_rec_id" do
     response = 
-      Task.async(ExerciseRecController, :delete, [conn, user_id, ex_rec_id])
+      Task.async(ExerciseRecController, :delete, [conn, ex_rec_id])
       |> Task.await
     
     conn
       |> Plug.Conn.prepend_resp_headers([{"content-type", "application/json"}])
-      |> send_resp(204, response)
+      |> Plug.Conn.put_status(204)
+      |> send_resp(204, "")
   end
 
   match _ do
