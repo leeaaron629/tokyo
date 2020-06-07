@@ -4,8 +4,8 @@ defmodule Tokyo.MixProject do
   def project do
     [
       app: :tokyo,
-      version: "0.2.0",
-      elixir: "~> 1.9",
+      version: "0.2.1",
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
