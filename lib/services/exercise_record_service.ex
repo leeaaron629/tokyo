@@ -25,11 +25,16 @@ defmodule Tokyo.Service.ExerciseRecord do
   def get_one(ex_rec_id) do
     IO.puts "Fetching an exercise record with #{ex_rec_id}"
 
-    Tokyo.Db.ExerciseRecord
+    ex_rec = Tokyo.Db.ExerciseRecord
       |> where(ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
       |> to_model
-      |> Map.put("sets", ExSetService.get_all(ex_rec_id))
+
+      cond do
+        ex_rec == %{} -> nil
+        ex_rec == nil -> nil
+        true -> Map.put(ex_rec, "sets", ExSetService.get_all(ex_rec_id))       
+      end
   end
 
   def save(ex_rec, user_id) do
@@ -111,17 +116,10 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def delete(user_id, ex_rec_id) do
-    IO.puts "Deleting exercise record #{inspect ex_rec_id} from #{inspect user_id}"
-
-    ex_rec_to_delete = Tokyo.Db.ExerciseRecord
-      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
-      |> Tokyo.Repo.one
-    
-    IO.puts "Deleting... ${inspect ex_rec_to_delete}"
-
+  def delete(ex_rec_id) do
+    IO.puts "Deleting exercise record #{inspect ex_rec_id}..."
     Tokyo.Db.ExerciseRecord
-      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> where(ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
       |> IO.inspect
       |> Tokyo.Repo.delete

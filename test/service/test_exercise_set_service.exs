@@ -1,6 +1,7 @@
 defmodule TokyoTest.ExerciseSetService do
   use ExUnit.Case
   doctest Tokyo.Service.ExerciseRecord
+  doctest Tokyo.Service.ExerciseSet
 
   alias Tokyo.Service.ExerciseSet, as: ExSetService
   alias Tokyo.Service.ExerciseRecord, as: ExRecService
@@ -89,6 +90,34 @@ defmodule TokyoTest.ExerciseSetService do
           assert expected["reps"] == actual["reps"]
         end
       ) 
+  end
+
+  test "create and delete the exercise record" do
+    ex_rec_id = Ecto.UUID.generate
+    user_id = "@test_user"
+    ex_id = Ecto.UUID.generate
+    workout_id = Ecto.UUID.generate
+    created_date = DateTime.utc_now |> DateTime.to_string
+
+    ex_rec = %{
+      "exerciseId" => ex_id,
+      "exerciseName" => "Squat",
+      "workoutId" => workout_id,
+      "createdDate" => created_date
+    }
+
+    saved_ex_rec = ExRecService.save(ex_rec, user_id)
+    fetched_ex_rec = ExRecService.get_one(saved_ex_rec["exerciseRecId"])
+      |> IO.inspect
+    assert fetched_ex_rec != nil
+    IO.puts "UUID created in tests... #{inspect saved_ex_rec["exerciseRecId"]}"
+
+    IO.puts "Deleting... #{saved_ex_rec["exerciseRecId"]}"
+    ExRecService.delete(fetched_ex_rec["exerciseRecId"])
+    fetched_ex_rec = ExRecService.get_one(saved_ex_rec["exerciseRecId"])
+      |> IO.inspect
+    assert fetched_ex_rec == nil
+    
   end
 
 end
