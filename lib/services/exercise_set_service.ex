@@ -23,6 +23,7 @@ defmodule Tokyo.Service.ExerciseSet do
       |> to_model
   end
 
+  def save_all(nil, _), do: {:ok, []}
   def save_all(ex_sets, ex_rec_id) do
     IO.puts "Creating exercise sets for #{inspect ex_rec_id}... #{inspect ex_sets}"
     

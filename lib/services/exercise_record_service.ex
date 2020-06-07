@@ -22,11 +22,11 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def get_one(user_id, ex_rec_id) do
-    IO.puts "Fetching an exercise record for #{user_id} [#{ex_rec_id}]"
+  def get_one(ex_rec_id) do
+    IO.puts "Fetching an exercise record with #{ex_rec_id}"
 
     Tokyo.Db.ExerciseRecord
-      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> where(ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
       |> to_model
       |> Map.put("sets", ExSetService.get_all(ex_rec_id))
@@ -61,10 +61,12 @@ defmodule Tokyo.Service.ExerciseRecord do
     ExSetService.delete_ex_sets(ex_rec_id)    
 
     IO.puts "Saving exercise sets #{inspect ex_rec["sets"]} with #{ex_rec_id}..."
-    saved_sets = case ExSetService.save_all(ex_rec["sets"], ex_rec_id) do
-      {:ok, sets} -> sets
-      {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
-    end
+    saved_sets = ExSetService.save_all(ex_rec["sets"], ex_rec_id)
+      |> IO.inspect
+      |> case do
+        {:ok, sets} -> sets
+        {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
+      end
      
     saved_ex_rec
       |> Map.put("sets", saved_sets)
@@ -111,6 +113,13 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   def delete(user_id, ex_rec_id) do
     IO.puts "Deleting exercise record #{inspect ex_rec_id} from #{inspect user_id}"
+
+    ex_rec_to_delete = Tokyo.Db.ExerciseRecord
+      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> Tokyo.Repo.one
+    
+    IO.puts "Deleting... ${inspect ex_rec_to_delete}"
+
     Tokyo.Db.ExerciseRecord
       |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
