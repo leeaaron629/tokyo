@@ -113,12 +113,15 @@ defmodule Tokyo.Service.ExerciseSet do
 
   def delete_ex_sets(ex_rec_id) do
     IO.puts "Deleting all exercise sets of exercise record - #{ex_rec_id}" 
-    
     results = from(
       es in Tokyo.Db.ExerciseSet,
       where: es.ex_rec_id == ^ex_rec_id
     )
       |> Tokyo.Repo.delete_all
+      |> case do
+        {updated, _} -> {:ok, updated}
+        {:error, error} -> {:error, error}
+      end
   end
 
 

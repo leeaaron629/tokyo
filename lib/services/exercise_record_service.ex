@@ -116,8 +116,16 @@ defmodule Tokyo.Service.ExerciseRecord do
 
   end
 
-  def delete(ex_rec_id) do
+  def delete_ex_rec(ex_rec_id) do
     IO.puts "Deleting exercise record #{inspect ex_rec_id}..."
+    ExSetService.delete_ex_sets(ex_rec_id)
+      |> case do
+        {:ok, _} -> delete(ex_rec_id)
+        {:error, errors} -> {:error, errors}
+      end
+  end
+
+  defp delete(ex_rec_id) do
     Tokyo.Db.ExerciseRecord
       |> where(ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one

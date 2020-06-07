@@ -26,8 +26,8 @@ defmodule Tokyo.Controller.ExerciseRecord do
 
   end
 
-  def get_one(user_id, ex_rec_id) do
-    ExRecService.get_one(user_id, ex_rec_id)
+  def get_one(ex_rec_id) do
+    ExRecService.get_one(ex_rec_id)
   end
 
   # TODO - Combine the two save methods below
@@ -50,8 +50,8 @@ defmodule Tokyo.Controller.ExerciseRecord do
     end
   end
 
-  def delete(_conn, user_id, ex_rec_id) do
-    ExRecService.delete(user_id, ex_rec_id)
+  def delete(_conn, ex_rec_id) do
+    ExRecService.delete_ex_rec(ex_rec_id)
   end
 
   defp validate(ex_rec) do
