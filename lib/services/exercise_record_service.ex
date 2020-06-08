@@ -42,13 +42,14 @@ defmodule Tokyo.Service.ExerciseRecord do
 
     ex_rec_to_save = %{
       user_id: user_id,
+      ex_rec_id: ex_rec["exerciseRecId"],
       ex_id: ex_rec["exerciseId"],
       ex_name: ex_rec["exerciseName"],
       workout_id: ex_rec["workoutId"],
       created_date: ex_rec["createdDate"],
     }
 
-    saved_ex_rec = case ex_rec["exerciseRecId"] do
+    saved_ex_rec_response = case ex_rec["exerciseRecId"] do
       nil ->
         ex_rec_to_save 
           |> Map.put(:ex_rec_id, Ecto.UUID.generate)
@@ -59,37 +60,45 @@ defmodule Tokyo.Service.ExerciseRecord do
           |> update
     end
 
-    IO.puts "Result from #{inspect ex_rec}"
-    ex_rec_id = saved_ex_rec["exerciseRecId"]
+    saved_ex_sets_response = case saved_ex_rec_response do
+      {:ok, saved_ex_rec} -> 
+        update_ex_sets(ex_rec["sets"], saved_ex_rec["exerciseRecId"])
+      {:error, msg} -> {:error, msg}
+    end
 
+    case saved_ex_sets_response do
+      {:ok, saved_ex_sets} ->
+        {:ok, saved_ex_rec} = saved_ex_rec_response
+        IO.puts "saved_ex_rec_from response: #{inspect saved_ex_rec}"
+        saved_ex_rec
+          |> Map.put("sets", saved_ex_sets)
+      {:error, msg} -> {:error, msg}
+    end
+  end
+
+  defp update_ex_sets(sets_to_save, ex_rec_id) do
     # Delete all exercise sets of this ex_rec
     ExSetService.delete_ex_sets(ex_rec_id)    
-
-    IO.puts "Saving exercise sets #{inspect ex_rec["sets"]} with #{ex_rec_id}..."
-    saved_sets = ExSetService.save_all(ex_rec["sets"], ex_rec_id)
-      |> IO.inspect
-      |> case do
-        {:ok, sets} -> sets
-        {:error, errors} -> IO.puts "Error saving exercise sets: #{errors}" 
-      end
-     
-    saved_ex_rec
-      |> Map.put("sets", saved_sets)
-      |> IO.inspect
-
+    IO.puts "Saving exercise sets #{inspect sets_to_save} with #{ex_rec_id}..."
+    ExSetService.save_all(sets_to_save, ex_rec_id)
   end
 
   # TODO - Check if it's possible to combine create & update into insert_or_update
   def create(ex_rec) do
     IO.puts "Creating exercise record #{inspect ex_rec}"
-    %Tokyo.Db.ExerciseRecord{}
+    changeset = %Tokyo.Db.ExerciseRecord{}
       |> ExRecDb.changeset(ex_rec)
       |> IO.inspect
-      |> Tokyo.Repo.insert_or_update
-      |> case do
-        {:ok, created_ex_rec} -> to_model(created_ex_rec)
-        {:error, changeset} -> IO.puts "Error has occured: #{inspect changeset}"
-      end
+
+    result = cond do
+      changeset.errors != [] -> {:error, changeset.errors}
+      changeset.errors == [] -> Tokyo.Repo.insert_or_update(changeset)
+    end
+
+    case result do 
+      {:ok, created_ex_rec} -> {:ok, to_model(created_ex_rec)}
+      {:error, error} -> {:error, error}
+    end
   end
 
   def update(ex_rec) do
@@ -102,18 +111,21 @@ defmodule Tokyo.Service.ExerciseRecord do
     IO.puts "user_id: #{user_id} ex_rec_id: #{ex_rec_id}"
 
     current = Tokyo.Db.ExerciseRecord
-      |> where(user_id: ^user_id, ex_rec_id: ^ex_rec_id)
+      |> where(ex_rec_id: ^ex_rec_id)
       |> Tokyo.Repo.one
 
     IO.puts "Current: #{inspect current}"
 
-    Tokyo.Db.ExerciseRecord.changeset(current, ex_rec)
-      |> Tokyo.Repo.update
-      |> case do
-          {:ok, updated_ex_rec} -> to_model(updated_ex_rec)
-          {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"  
-      end
-
+    case current do
+      nil -> {:error, %{"message" => "Not Found"}}
+      current ->
+        Tokyo.Db.ExerciseRecord.changeset(current, ex_rec)
+          |> Tokyo.Repo.update
+          |> case do
+            {:ok, updated_ex_rec} -> {:ok, to_model(updated_ex_rec)}
+            {:error, changeset} -> IO.puts "Error updated exercise record: #{inspect changeset}"    
+          end
+    end
   end
 
   def delete_ex_rec(ex_rec_id) do
